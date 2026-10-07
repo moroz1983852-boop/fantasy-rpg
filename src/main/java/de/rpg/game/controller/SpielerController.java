@@ -57,11 +57,11 @@ public class SpielerController {
     }
 
     @PostMapping("/{spielerId}/inventar/{gegenstandId}")
-    public ResponseEntity<Spieler> gegenstandHinzufügen(
+    public ResponseEntity<Spieler> gegenstandHinzufuegen(
             @PathVariable Long spielerId,
             @PathVariable Long gegenstandId) {
 
-        Spieler aktualisierterSpieler = spielerService.gegenstandHinzufügen(spielerId, gegenstandId);
+        Spieler aktualisierterSpieler = spielerService.gegenstandHinzufuegen(spielerId, gegenstandId);
         return ResponseEntity.ok(aktualisierterSpieler);
     }
 
@@ -70,6 +70,22 @@ public class SpielerController {
             @PathVariable Long spielerId,
             @PathVariable Long gegenstandId) {
         Spieler aktualisierterSpieler = spielerService.trankBenutzen(spielerId, gegenstandId);
+        return ResponseEntity.ok(aktualisierterSpieler);
+    }
+
+    @PostMapping("/{spielerId}/xp")
+    public ResponseEntity<Spieler> xpHinzufuegen(
+            @PathVariable Long spielerId,
+            @RequestParam int xp) {
+        Spieler aktualisierterSpieler = spielerService.xpHinzufuegen(spielerId, xp);
+        return ResponseEntity.ok(aktualisierterSpieler);
+    }
+
+    @PostMapping("/{spielerId}/ausruesten/{gegenstandId}")
+    public ResponseEntity<Spieler> ausruestungAnlegen(
+            @PathVariable Long spielerId,
+            @PathVariable Long gegenstandId) {
+        Spieler aktualisierterSpieler = spielerService.ausruestungAnlegen(spielerId, gegenstandId);
         return ResponseEntity.ok(aktualisierterSpieler);
     }
 }

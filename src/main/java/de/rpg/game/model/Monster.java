@@ -22,4 +22,8 @@ public class Monster {
     private Integer gesundheit;
     private Integer staerke;
     private Integer erfahrungspunkteBelohnung;
+
+    public boolean getGesi() {
+        return false;
+    }
 }

@@ -8,16 +8,15 @@ import de.rpg.game.repository.SpielerRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Map;
 import java.util.Objects;
 
 @Service
 @Transactional
 public class KampfService {
 
-    private SpielerRepository spielerRepository;
-    private MonsterRepository monsterRepository;
-    private SpielerService spielerService;
+    private final SpielerRepository spielerRepository;
+    private final MonsterRepository monsterRepository;
+    private final SpielerService spielerService;
 
     public KampfService(
             SpielerRepository spielerRepository,
@@ -36,30 +35,30 @@ public class KampfService {
 
         if (spieler.getGesundheit() <= 0) {
             throw new IllegalArgumentException(
-                    "Du bist zu schwach Kämpfen! Bitte heile dich zuerst mit einem Trank.");
+                    "Du bist zu schwach zum Kämpfen! Bitte heile dich zuerst mit einem Trank.");
         }
 
         StringBuilder kampfLog = new StringBuilder();
 
         int schadenAmMonster = nullSicher(spieler.getStaerke());
         monster.setGesundheit(nullSicher(monster.getGesundheit()) - schadenAmMonster);
-        kampfLog.append(String.format("Du greifst %s  an und verursachst %d Schaden.",
+        kampfLog.append(String.format("Du greifst %s an und verursachst %d Schaden. ",
                 monster.getName(), schadenAmMonster));
 
         if (monster.getGesundheit() <= 0) {
             int belohnung = nullSicher(monster.getErfahrungspunkteBelohnung());
             monsterRepository.delete(monster);
             spielerService.xpHinzufuegen(spielerId, belohnung);
-            kampfLog.append(String.format("Sieg! %s wurde besiegt! Du erhälst %d XP",
+            kampfLog.append(String.format("Sieg! %s wurde besiegt! Du erhälst %d XP.",
                     monster.getName(), belohnung));
             return kampfLog.toString();
         }
         monsterRepository.save(monster);
-        kampfLog.append(String.format("%s hat noch %d HP.", monster.getName(), monster.getGesundheit()));
+        kampfLog.append(String.format("%s hat noch %d HP. ", monster.getName(), monster.getGesundheit()));
 
         int schadenAmSpieler = nullSicher(monster.getStaerke());
         spieler.setGesundheit(Math.max(0, spieler.getGesundheit() - schadenAmSpieler));
-        kampfLog.append(String.format("%s greifst dich an und verursacht %d Schaden.",
+        kampfLog.append(String.format("%s greift dich an und verursacht %d Schaden! ",
                 monster.getName(), schadenAmSpieler));
         spielerRepository.save(spieler);
 
